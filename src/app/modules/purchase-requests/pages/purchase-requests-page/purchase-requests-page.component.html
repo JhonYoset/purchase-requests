@@ -1,0 +1,42 @@
+<div class="container">
+  <header class="dashboard-header">
+    <h1>Dashboard de Solicitudes de Compras</h1>
+    <p class="subtitle">Gestión y administración de solicitudes</p>
+  </header>
+
+  <app-purchase-request-filter />
+
+  <div *ngIf="loading$ | async" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando solicitudes...</p>
+  </div>
+
+  <div *ngIf="error$ | async as error" class="error-container">
+    <p>Error: {{ error }}</p>
+    <button class="btn-retry" (click)="loadRequests()">Reintentar</button>
+  </div>
+
+  <div class="stats-grid" *ngIf="(filteredRequests$ | async) as requests">
+    <div class="stat-card stat-total">
+      <h3>Total</h3>
+      <p class="stat-number">{{ requests.length }}</p>
+    </div>
+    <div class="stat-card stat-pending">
+      <h3>Pendientes</h3>
+      <p class="stat-number">{{ getPendingCount(requests) }}</p>
+    </div>
+    <div class="stat-card stat-approved">
+      <h3>Aprobadas</h3>
+      <p class="stat-number">{{ getApprovedCount(requests) }}</p>
+    </div>
+    <div class="stat-card stat-rejected">
+      <h3>Rechazadas</h3>
+      <p class="stat-number">{{ getRejectedCount(requests) }}</p>
+    </div>
+  </div>
+
+  <app-purchase-request-list
+    [requests]="(filteredRequests$ | async) || []"
+    (statusChange)="onStatusChange($event)"
+  />
+</div>

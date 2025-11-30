@@ -1,0 +1,26 @@
+<div class="filter-container">
+  <div class="filter-group">
+    <label for="search">Buscar por solicitante:</label>
+    <input
+      id="search"
+      type="text"
+      [formControl]="searchControl"
+      placeholder="Nombre del solicitante..."
+      class="filter-input"
+    />
+  </div>
+
+  <div class="filter-group">
+    <label for="status">Filtrar por estado:</label>
+    <select
+      id="status"
+      [formControl]="statusControl"
+      class="filter-select"
+    >
+      <option value="ALL">Todos</option>
+      <option value="PENDING">Pendientes</option>
+      <option value="APPROVED">Aprobadas</option>
+      <option value="REJECTED">Rechazadas</option>
+    </select>
+  </div>
+</div>

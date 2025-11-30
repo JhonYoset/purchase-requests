@@ -1,0 +1,64 @@
+<div class="list-container">
+  <div class="list-header">
+    <h3>Solicitudes de Compra</h3>
+    <span class="count-badge">{{ requests.length }} solicitudes</span>
+  </div>
+
+  <div *ngIf="requests.length === 0" class="empty-state">
+    <p>No se encontraron solicitudes</p>
+  </div>
+
+  <div class="requests-grid">
+    <div
+      *ngFor="let request of requests; trackBy: trackByRequestId"
+      class="request-card"
+      [appStatusBorder]="request.status"
+    >
+      <div class="request-header">
+        <h4>{{ request.requester }}</h4>
+        <span class="status-badge" [class]="'status-' + request.status.toLowerCase()">
+          {{ getStatusLabel(request.status) }}
+        </span>
+      </div>
+
+      <div class="request-details">
+        <div class="detail-item">
+          <span class="detail-label">Monto:</span>
+          <span class="detail-value amount">{{ request.amount | currency:'USD':'symbol':'1.2-2' }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Fecha:</span>
+          <span class="detail-value">{{ request.createdAt | date:'short' }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">ID:</span>
+          <span class="detail-value">{{ request.id }}</span>
+        </div>
+      </div>
+
+      <div class="request-actions">
+        <button
+          class="btn btn-approve"
+          [disabled]="request.status === 'APPROVED'"
+          (click)="onStatusChange(request.id, 'APPROVED')"
+        >
+          Aprobar
+        </button>
+        <button
+          class="btn btn-reject"
+          [disabled]="request.status === 'REJECTED'"
+          (click)="onStatusChange(request.id, 'REJECTED')"
+        >
+          Rechazar
+        </button>
+        <button
+          class="btn btn-pending"
+          [disabled]="request.status === 'PENDING'"
+          (click)="onStatusChange(request.id, 'PENDING')"
+        >
+          Pendiente
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
