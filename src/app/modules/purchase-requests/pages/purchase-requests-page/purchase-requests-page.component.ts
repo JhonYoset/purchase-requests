@@ -18,7 +18,7 @@ import { selectAllRequests, selectError, selectLoading } from '../../store/purch
 })
 export class PurchaseRequestsPageComponent implements OnInit {
   @ViewChild(PurchaseRequestFilterComponent) filterComponent!: PurchaseRequestFilterComponent;
-
+  
   allRequests$: Observable<PurchaseRequest[]>;
   loading$: Observable<boolean>;
   error$: Observable<string | null>;
@@ -31,7 +31,22 @@ export class PurchaseRequestsPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('🚀 Component initialized - Loading requests...');
     this.loadRequests();
+    
+    // Debug: Subscribirse para ver los datos
+    this.allRequests$.subscribe(requests => {
+      console.log('📦 All requests from store:', requests);
+      console.log('📊 Total requests:', requests.length);
+    });
+
+    this.loading$.subscribe(loading => {
+      console.log('⏳ Loading state:', loading);
+    });
+
+    this.error$.subscribe(error => {
+      console.log('❌ Error state:', error);
+    });
 
     setTimeout(() => {
       if (this.filterComponent?.filter$) {
@@ -39,19 +54,26 @@ export class PurchaseRequestsPageComponent implements OnInit {
           this.allRequests$,
           this.filterComponent.filter$
         ]).pipe(
-          map(([requests, filter]) => this.filterRequests(requests, filter))
+          map(([requests, filter]) => {
+            const filtered = this.filterRequests(requests, filter);
+            console.log('🔍 Filtered requests:', filtered);
+            return filtered;
+          })
         );
       } else {
+        console.log('⚠️ No filter component, using all requests');
         this.filteredRequests$ = this.allRequests$;
       }
     });
   }
 
   loadRequests(): void {
+    console.log('📡 Dispatching loadPurchaseRequests action...');
     this.store.dispatch(PurchaseRequestsActions.loadPurchaseRequests());
   }
 
   onStatusChange(event: StatusChangeEvent): void {
+    console.log('🔄 Status change requested:', event);
     this.store.dispatch(
       PurchaseRequestsActions.updateStatus({
         id: event.id,
@@ -64,9 +86,7 @@ export class PurchaseRequestsPageComponent implements OnInit {
     return requests.filter(request => {
       const matchesSearch = filter.searchText === '' ||
         request.requester.toLowerCase().includes(filter.searchText.toLowerCase());
-
       const matchesStatus = filter.status === 'ALL' || request.status === filter.status;
-
       return matchesSearch && matchesStatus;
     });
   }

@@ -4,6 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { purchaseRequestsReducer } from './modules/purchase-requests/store/purchase-requests.reducer';
@@ -18,16 +19,11 @@ import { PurchaseRequestsEffects } from './modules/purchase-requests/store/purch
     StoreModule.forRoot({
       purchaseRequests: purchaseRequestsReducer
     }),
-    EffectsModule.forRoot([PurchaseRequestsEffects, ]),
-    StoreDevtoolsModule.instrument({
-      maxAge: 25,
-      logOnly: false,
-      autoPause: true,
-      trace: false,
-      traceLimit: 75
-    }),
-    StoreModule.forRoot({}, {}),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() })
+    EffectsModule.forRoot([PurchaseRequestsEffects]),
+    StoreDevtoolsModule.instrument({ 
+      maxAge: 25, 
+      logOnly: !isDevMode() 
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]
